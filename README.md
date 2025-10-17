@@ -1,92 +1,35 @@
-# Terp Haus - Premium THCA Dispensary Website
+# Terp Haus — Marketing Site
 
-A modern, high-performance e-commerce website for Terp Haus dispensary in Austin, Texas. Built with Next.js 15, TypeScript, Tailwind CSS, and integrated with Flowhub POS system.
+A specials-first landing + map + gallery that links to Flowhub.
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+ and npm
-- Flowhub account with API access
-
-### Installation
+## Quickstart
 
 ```bash
-# Clone the repository
-git clone https://github.com/bohselecta/terp-haus.git
-cd terp-haus
-
-# Install dependencies
-npm install
-
-# Copy environment variables
-cp env.example .env.local
-
-# Edit .env.local with your Flowhub credentials
-# Get these from Flowhub by emailing help@flowhub.com
-
-# Start development server
-npm run dev
+pnpm install
+pnpm add react-leaflet leaflet
+cp .env.example .env.local
+pnpm dev
 ```
 
-Visit http://localhost:3000
+Then visit http://localhost:3000
 
-## 🎨 Brand System
+## Admin Access
 
-The application uses the Terp Haus brand system with:
+Visit `/admin` and enter your PIN from `NEXT_PUBLIC_ADMIN_PIN`.
 
-- **Primary Colors**: Teal (#1E7A83), Sage (#6C8C74), Terracotta (#B4643E)
-- **Typography**: Inter font family
-- **Logo Assets**: SVG logos in multiple variants (color, mono, outline, white)
-- **Design Tokens**: CSS custom properties for consistent theming
+- Edit specials JSON in the textarea and Save
+- The homepage rotator updates automatically
 
-### Brand Assets
-- `public/images/terp-haus-logo-color.svg` - Main logo
-- `public/images/terp-haus-logo-mono.svg` - Monochrome version
-- `public/images/terp-haus-logo-outline.svg` - Outline version
-- `public/images/terp-haus-logo-white.svg` - White version
-- `public/images/og/og-image.svg` - Open Graph image
+## Environment Variables
 
-## 🏗️ Architecture
-
-### Tech Stack
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **State Management**: Zustand (cart), React Query (server state)
-- **Animation**: Framer Motion
-- **POS Integration**: Flowhub API
-- **Deployment**: Vercel (recommended)
-
-### Project Structure
-```
-src/
-├── app/                    # Next.js app directory
-│   ├── api/               # API routes
-│   │   ├── products/      # Product endpoints
-│   │   ├── inventory/     # Inventory endpoints
-│   │   └── orders/        # Order endpoints
-│   ├── layout.tsx         # Root layout
-│   ├── page.tsx           # Homepage
-│   └── globals.css        # Global styles
-├── components/            # React components
-│   ├── layout/           # Layout components
-│   ├── ui/               # UI components
-│   └── product/          # Product components
-├── lib/                  # Utilities and libraries
-│   ├── flowhub/          # Flowhub API client
-│   ├── hooks/            # Custom React hooks
-│   └── utils/            # Helper functions
-└── types/                # TypeScript type definitions
-```
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env.local` file with:
+Create `.env.local` from `env.example`:
 
 ```env
-# Flowhub API Configuration
+# Admin Configuration
+NEXT_PUBLIC_ADMIN_PIN=terphaus-1234
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# Flowhub API Configuration (optional for future use)
 FLOWHUB_API_KEY=your_api_key_here
 FLOWHUB_CLIENT_ID=your_client_id_here
 FLOWHUB_LOCATION_ID=your_location_id_here
@@ -98,53 +41,69 @@ NEXT_PUBLIC_DISPENSARY_NAME=Terp Haus
 NEXT_PUBLIC_LOCATION=Austin, TX
 ```
 
-### Getting Flowhub Credentials
+## Customization
 
-1. Email help@flowhub.com to request API access
-2. Provide your dispensary information
-3. You'll receive:
-   - API Key
-   - Client ID
-   - Location ID
+### Map Location
+Update the coordinates in `src/app/page.tsx`:
+```typescript
+<MapSection lat={30.264979} lng={-97.746598} label="Terp Haus" />
+```
 
-## 🛠️ Features
+### Storefront Images
+Replace placeholder images in `public/images/`:
+- `storefront.jpg` - Replace with actual storefront photo
+- `interior-1.jpg` - Replace with interior shot 1  
+- `interior-2.jpg` - Replace with interior shot 2
 
-### Implemented ✅
-- Modern homepage with hero section
-- Responsive header and footer
-- Terp Haus brand integration
-- Flowhub API client
-- Shopping cart with Zustand
-- TypeScript type safety
-- SEO optimization
-- Mobile-responsive design
+### Specials Management
+- Access admin at `/admin`
+- Edit JSON format in the textarea
+- Save to update homepage rotator
+- Specials rotate every 4 seconds
 
-### To Implement 🔲
-- Product catalog pages
-- Product detail pages with terpene visualization
-- Checkout flow with age verification
-- Order tracking
-- Customer accounts
-- Educational content pages
-- Search functionality
-- Admin dashboard
+### Contact Information
+Update in `src/app/page.tsx`:
+- Address: "123 Terp Lane, Austin, TX 78704"
+- Hours: "Open daily 10am – 9pm"
+- Phone: `tel:+15125551234`
+- Directions link: `https://maps.app.goo.gl/`
 
-## 📊 API Endpoints
+## Notes
 
-### Products
-- `GET /api/products` - Get all products
-- `GET /api/products/[id]` - Get single product
+- POS, inventory, and checkout remain in Flowhub (linked)
+- Specials stored in-memory (resets on deployment)
+- Future: Swap PIN gate for NextAuth Google
+- Future: Persist specials to Neon database
+- Future: Wire `/api/notify` to Klaviyo / SpringBig automations
 
-### Inventory
-- `GET /api/inventory` - Get inventory status
-- `PUT /api/inventory` - Update inventory
+## Architecture
 
-### Orders
-- `POST /api/orders` - Create new order
-- `GET /api/orders` - Get orders
-- `PATCH /api/orders` - Update order status
+### Tech Stack
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Map**: React-Leaflet with OpenStreetMap
+- **State**: Client-side localStorage for admin auth
 
-## 🎯 Development
+### Project Structure
+```
+src/
+├── app/
+│   ├── admin/page.tsx          # PIN-gated admin interface
+│   ├── api/
+│   │   ├── specials/route.ts  # Specials CRUD API
+│   │   └── notify/route.ts    # Notification stubs
+│   ├── layout.tsx             # Root layout with footer
+│   └── page.tsx               # Marketing homepage
+├── components/ui/
+│   ├── SpecialsRotator.tsx    # Auto-rotating specials
+│   ├── MapSection.tsx         # Interactive map
+│   └── Gallery.tsx            # Image gallery with modal
+└── data/
+    └── specials.json          # Default specials data
+```
+
+## Development
 
 ### Available Scripts
 ```bash
@@ -152,17 +111,21 @@ npm run dev          # Start development server
 npm run build        # Build for production
 npm run start        # Start production server
 npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript checks
 ```
 
-### Development Workflow
-1. Make changes to components
-2. Test in browser (hot reload enabled)
-3. Run `npm run type-check` to verify types
-4. Run `npm run build` to test production build
-5. Commit changes
+### Testing Checklist
+1. Homepage loads with specials rotator working
+2. Map renders correctly with marker at specified location
+3. Gallery images clickable with fullscreen modal
+4. Admin page accessible at `/admin`
+5. PIN gate works correctly
+6. Specials can be edited and saved via admin
+7. Homepage updates reflect saved specials
+8. External links (Flowhub, directions, phone) work
+9. Responsive layout works on mobile and desktop
+10. Build completes without errors
 
-## 🚀 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 1. Push code to GitHub
@@ -172,86 +135,15 @@ npm run type-check   # Run TypeScript checks
 
 ### Environment Variables for Production
 Set these in your deployment platform:
-- `FLOWHUB_API_KEY`
-- `FLOWHUB_CLIENT_ID`
-- `FLOWHUB_LOCATION_ID`
+- `NEXT_PUBLIC_ADMIN_PIN`
+- `NEXT_PUBLIC_BASE_URL`
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_DISPENSARY_NAME`
 - `NEXT_PUBLIC_LOCATION`
-
-## 🔐 Security & Compliance
-
-- Age verification required (21+)
-- API keys stored server-side only
-- HTTPS enforced in production
-- Rate limiting recommended for API routes
-
-## 📱 Responsive Design
-
-The application is fully responsive with:
-- Mobile-first design approach
-- Touch-friendly interface
-- Optimized images
-- Fast loading times
-
-## 🎨 Customization
-
-### Colors
-Update CSS custom properties in `src/app/globals.css`:
-```css
-:root {
-  --color-brand-primary: #1E7A83;
-  --color-brand-secondary: #6C8C74;
-  --color-brand-accent: #B4643E;
-  /* ... */
-}
-```
-
-### Typography
-Fonts are configured in `src/app/layout.tsx`:
-```typescript
-const inter = Inter({
-  variable: "--font-body",
-  subsets: ["latin"],
-});
-```
-
-### Logo
-Replace logo files in `public/images/`:
-- `terp-haus-logo-color.svg`
-- `terp-haus-logo-mono.svg`
-- `terp-haus-logo-outline.svg`
-- `terp-haus-logo-white.svg`
-
-## 📈 Performance
-
-Target metrics:
-- Lighthouse Score: 95+
-- First Contentful Paint: <1s
-- Time to Interactive: <2s
-- Bundle Size: <200kb (gzipped)
-
-## 🤝 Contributing
-
-1. Create a feature branch
-2. Make your changes
-3. Test thoroughly
-4. Submit a pull request
-
-## 📞 Support
-
-- **Flowhub API**: help@flowhub.com
-- **Technical Issues**: Create an issue in this repository
-- **Documentation**: Check the code comments and type definitions
-
-## 📄 License
-
-Private - All rights reserved
 
 ---
 
 Built with ❤️ for Terp Haus in Austin, Texas
 
-**Status**: Foundation Complete ✅  
-**Ready for**: Feature Development  
-**Next Steps**: Implement product catalog and checkout flow
+**Status**: Marketing Landing Complete ✅  
+**Ready for**: Content Updates & Image Replacement

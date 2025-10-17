@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
   /* Terp Haus Brand Colors */
@@ -37,4 +38,10 @@ body {
 ::selection {
   background-color: var(--color-brand-primary);
   color: white;
+}
+
+/* Leaflet default styles */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
 }

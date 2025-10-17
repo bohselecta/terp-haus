@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "title": "First-Time Guest 30% Off", "note": "Show ID at checkout", "category": "WELCOME" },
+    { "title": "Flower Happy Hour", "price": "$35 1/8ths", "category": "FLOWER" },
+    { "title": "Edibles 2 for $40", "category": "EDIBLES" }
+  ]
+}
