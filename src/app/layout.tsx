@@ -62,17 +62,17 @@ export const metadata: Metadata = {
     description: "Premium THCA dispensary in Austin, Texas. Crafted products, real terpene science.",
     images: ['/images/og/og-image.svg'],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
+      robots: {
+        index: false,
+        follow: false,
+        googleBot: {
+          index: false,
+          follow: false,
+          'max-video-preview': -1,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+        },
+      },
   verification: {
     google: 'your-google-verification-code',
   },
